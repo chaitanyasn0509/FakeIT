@@ -1,0 +1,4 @@
+[console_scripts]
+uncloud-build-dataset = datasets.builder:main
+uncloud-evaluate = evaluation.report:main
+uncloud-train = training.train:main

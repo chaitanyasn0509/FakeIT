@@ -1,0 +1,29 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+frontend/node_modules/
+
+# Build
+.next/
+dist/
+build/
+
+# Logs
+*.log
+
+# Dataset
+data/raw/
+data/processed/
+uploads/
+outputs/
+
+# Training
+runs/
+checkpoints/
+
+# Environment
+.env

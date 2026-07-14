@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uncloud-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uncloud-backend
+  template:
+    metadata:
+      labels:
+        app: uncloud-backend
+    spec:
+      containers:
+        - name: api
+          image: uncloud-it-backend:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: uncloud-backend-env
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uncloud-backend
+spec:
+  selector:
+    app: uncloud-backend
+  ports:
+    - port: 8000
+      targetPort: 8000

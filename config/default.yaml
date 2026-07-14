@@ -1,0 +1,49 @@
+project:
+  name: FakeIT
+  seed: 42
+
+data:
+  raw_dir: data/raw
+  processed_dir: C:/Users/Chaitanya/Downloads/train
+  patch_dir: data/patches
+  manifest_path: data/manifests/manifest.csv
+
+dataset:
+  splits:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+
+model:
+  name: restormer
+  in_channels: 4
+  out_channels: 4
+  learning_rate: 0.0002
+  weight_decay: 0.00001
+
+loss:
+  l1: 1.0
+
+training:
+  batch_size: 2
+  num_workers: 4
+
+  accelerator: gpu
+  devices: 1
+
+  precision: 16-mixed
+
+  max_epochs: 20
+
+  checkpoint_dir: checkpoints
+  log_dir: runs
+
+  monitor_metric: val/loss
+  early_stopping_patience: 20
+
+  accumulate_grad_batches: 1
+
+  bhoonidhi:
+  base_url: https://bhoonidhi-api.nrsc.gov.in
+
+  

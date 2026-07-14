@@ -1,0 +1,127 @@
+Metadata-Version: 2.4
+Name: uncloud-it
+Version: 0.1.0
+Summary: Generative cloud removal and surface reconstruction for LISS-IV imagery using multi-modal remote-sensing data.
+Author: UNCLOUND IT
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: accelerate>=0.33
+Requires-Dist: aiofiles>=24.1
+Requires-Dist: albumentations>=1.4
+Requires-Dist: boto3>=1.34
+Requires-Dist: diffusers>=0.29
+Requires-Dist: email-validator>=2.2
+Requires-Dist: fastapi>=0.111
+Requires-Dist: geopandas>=1.0
+Requires-Dist: httpx>=0.27
+Requires-Dist: matplotlib>=3.9
+Requires-Dist: numpy>=1.26
+Requires-Dist: opencv-python-headless>=4.10
+Requires-Dist: pandas>=2.2
+Requires-Dist: planetary-computer>=1.0
+Requires-Dist: pillow>=10.4
+Requires-Dist: psycopg[binary]>=3.2
+Requires-Dist: pydantic>=2.8
+Requires-Dist: pydantic-settings>=2.4
+Requires-Dist: python-dotenv>=1.0
+Requires-Dist: python-jose[cryptography]>=3.3
+Requires-Dist: python-multipart>=0.0.9
+Requires-Dist: pytorch-lightning>=2.3
+Requires-Dist: PyYAML>=6.0
+Requires-Dist: rasterio>=1.3
+Requires-Dist: rio-cogeo>=5.3
+Requires-Dist: scikit-image>=0.24
+Requires-Dist: scipy>=1.14
+Requires-Dist: shapely>=2.0
+Requires-Dist: SQLAlchemy>=2.0
+Requires-Dist: tensorboard>=2.17
+Requires-Dist: torch>=2.3
+Requires-Dist: torch-fidelity>=0.3
+Requires-Dist: torchmetrics>=1.4
+Requires-Dist: torchvision>=0.18
+Requires-Dist: tqdm>=4.66
+Requires-Dist: transformers>=4.43
+Requires-Dist: typer>=0.12
+Requires-Dist: uvicorn[standard]>=0.30
+Requires-Dist: wandb>=0.17
+Provides-Extra: dev
+Requires-Dist: pytest>=8.2; extra == "dev"
+Requires-Dist: pytest-mock>=3.14; extra == "dev"
+Requires-Dist: ruff>=0.5; extra == "dev"
+Requires-Dist: mypy>=1.10; extra == "dev"
+Requires-Dist: types-PyYAML>=6.0; extra == "dev"
+
+# UNCLOUD IT
+
+Generative AI-Based Cloud Removal and Surface Reconstruction for LISS-IV Satellite Imagery using Multi-Modal Remote Sensing Data.
+
+This repository is structured as a research-grade project: official Bhoonidhi API access, geospatial preprocessing, multi-modal dataset pairing, modular reconstruction models, Lightning training, quantitative evaluation, a FastAPI backend, a Next.js frontend, and containerized deployment.
+
+## Core Capabilities
+
+- Bhoonidhi API client with `/auth/token`, refresh-token flow, STAC collection/search, metadata retrieval, online-product filtering, throttling-aware retries, and `/download`.
+- Preprocessing for reprojection, AOI clipping, co-registration, normalization, patch generation, and cloud masks through thresholding, FMask, or deep segmentation checkpoints.
+- Multi-modal dataset builder for cloudy LISS-IV, cloud-free LISS-IV, Sentinel-1 SAR, Sentinel-2, DEM, and historical LISS-IV.
+- Models: U-Net baseline, conditional GAN, conditional diffusion model, and transformer reconstructor.
+- Losses: L1, SSIM, perceptual, adversarial, edge, and spectral consistency.
+- Metrics: PSNR, SSIM, LPIPS, MAE, RMSE, SAM, ERGAS, UIQI, and FID.
+- FastAPI backend and Next.js frontend for upload, cloud detection, reconstruction, metrics, history, and GeoTIFF download.
+
+## Quick Start
+
+```bash
+cp .env.example .env
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+python -m scripts.download_bhoonidhi --query docs/example_bhoonidhi_query.json
+python -m scripts.run_pipeline prepare-scene --scene data/raw/bhoonidhi/example.tif --fetch-auxiliary
+python -m scripts.preprocess_scene --scene data/raw/bhoonidhi/example.tif --group cloudy_liss4
+uncloud-build-dataset --config config/default.yaml
+uncloud-train --config config/default.yaml --model unet
+uvicorn backend.app.main:app --reload
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Docker:
+
+```bash
+docker compose up --build
+```
+
+## Repository Layout
+
+```text
+backend/          FastAPI app, database models, inference and storage services
+frontend/         Next.js geospatial upload and reconstruction UI
+models/           U-Net, cGAN, diffusion, transformer, losses, model factory
+training/         Lightning DataModule, train CLI, tiled inference
+datasets/         Bhoonidhi client, auxiliary catalog interfaces, manifest builder
+preprocessing/    CRS, registration, clipping, normalization, masks, patches
+evaluation/       Metrics and report generation
+visualization/    Qualitative comparison figures
+deployment/       Kubernetes starter manifests
+docs/             Installation, data, training, inference, architecture, notes
+tests/            Unit tests for config, metrics, and API-client behavior
+```
+
+## Bhoonidhi Notes
+
+The implementation follows the official Bhoonidhi API specification page: authentication uses `userId`, `password`, and `grant_type=password` at `/auth/token`; refresh uses `grant_type=refresh_token`; STAC search is under `/data/search`; downloads use `/download?id=<id>&collection=<collection>`. Configure credentials only through environment variables.
+
+## Documentation
+
+- [Installation Guide](docs/installation.md)
+- [Dataset Preparation Guide](docs/dataset_preparation.md)
+- [Training Guide](docs/training.md)
+- [Inference Guide](docs/inference.md)
+- [API Documentation](docs/api.md)
+- [Architecture Diagram](docs/architecture.md)
+- [Research Notes](docs/research_notes.md)

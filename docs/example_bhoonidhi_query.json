@@ -1,0 +1,17 @@
+{
+  "collections": ["RESOURCESAT-2_LISS4_MX_L2"],
+  "datetime": "2024-01-01T00:00:00Z/2024-12-31T23:59:59Z",
+  "intersects": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [77.0, 12.8],
+        [77.8, 12.8],
+        [77.8, 13.4],
+        [77.0, 13.4],
+        [77.0, 12.8]
+      ]
+    ]
+  },
+  "limit": 100
+}
